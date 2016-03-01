@@ -52,3 +52,30 @@ def knnestimate(data,vec1,k=5):
         avg=data[idx]['result']
     avg=avg/k
     return avg
+
+def inverseweight(dist,num=1.0,const=0.1):
+    return num/(dist+const)
+
+def subtractweight(dist,const=1.0):
+    if dist>const:
+        return 0
+    else:
+        return const-dist
+
+def gaussian(dist,digma=10.0):
+    return math.e**(-dist**2/(2*sigma**2))
+
+def weightedknn(data,vec1,k=5,weightf=gaussian):
+    dlist=getdistance(data,vec1)
+
+    avg=0.0
+    totalweight=0.0
+
+    for i in range(k):
+        dist=dlist[i][0]
+        idx=dlist[i][1]
+        weight=weightf(dist)
+        avg+=weight*data[idx]['result']
+        totalweight+=weight
+    avg=avg/totalweight
+    return avg
