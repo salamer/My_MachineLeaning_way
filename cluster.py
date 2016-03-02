@@ -76,6 +76,7 @@ def get_random_num(num=100):
     data_set=[]
     for i in range(num):
         data_set.append(point(x=randint(1,100),y=randint(1,100)))
+
     return data_set
 
 '''

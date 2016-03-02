@@ -1,6 +1,8 @@
 from random import random,randint
 import math
 
+weightdomain=[(0,20)]*4
+
 def wineprice(rating,age):
     peak_age=rating-50
 
@@ -79,3 +81,79 @@ def weightedknn(data,vec1,k=5,weightf=gaussian):
         totalweight+=weight
     avg=avg/totalweight
     return avg
+
+def dividedata(data,test=0.05):
+    trainset=[]
+    testset=[]
+    for row in data:
+        if random()<test:
+            testset.append(row)
+        else:
+            trainset.append(row)
+
+    return trainset,testset
+
+def testalgorithm(algf,trainset,testset):
+    error=0.0
+    for row in testset:
+        guess=algf(trainset,row['input'])
+        error+=(row['result']-guess)**2
+    return error/len(testset)
+
+def crossvalidate(algf,data,trials=100,test=0.05):
+    error=0.0
+    for i in range(trials):
+        trainset,testset=dividedata(data,test)
+        error+=testalgorithm(algf,trainset,testset)
+
+    return error/trials
+
+def wineset2():
+    rows=[]
+    for i in range(300):
+        rating=random()*50+50
+        age=random()*50
+        aisle=float(randint(1,20))
+        bottlesize=[375.0,750.0,1500.0,3000.0][randint(0,3)]
+        price=wineprice(rating,age)
+        price*=(bottlesize/750)
+        price*=(random()*0.9+0.2)
+        rows.append({'input':(rating,age,aisle,bottlesize),'result':price})
+    return rows
+
+def rescale(data,scale):
+    scaleddata=[]
+    for row in data:
+        scaled=[scale[i]*row['input'][i] for i in range(len(scale))]
+        scaleddata.append({'input':scaled,'result':row['input']})
+    return scaleddata
+
+def createcostfunction(algf,data):
+    def costf(scale):
+        sdata=rescale(data,scale)
+        return crossvalidate(algf,sdata,trials)
+    return costf
+def wineset3():
+    rows=wineset1()
+    for row in rows:
+        if random()<0.5:
+            row['result']*=0.5
+    return rows
+
+def probguess(data,vec1,low,high,k=5,weightf=gaussian):
+    dlist=getdistance(data,vec1)
+    nweight=0.0
+    tweight=0.0
+
+    for i in range(k):
+        dist=dlist[i][0]
+        idx=dlist[i][1]
+        weight=weightf(dist)
+        v=data[idx]['result']
+
+        if v>=low and v<=high:
+            nweight+=weight
+        tweight+=weight
+    if tweight==0:
+        return 0
+    return nweight/tweight
