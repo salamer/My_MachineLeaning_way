@@ -9,7 +9,7 @@ project:k-means聚类
 
 from random import randint
 import math
-import matplotlib.pylab as mlp
+import matplotlib.pylab as plt
 import seaborn as sns
 import numpy
 
@@ -60,12 +60,12 @@ def draw_pic(data_list_set):
             parse_x.append(data_list_set[i][j].x)
             parse_y.append(data_list_set[i][j].y)
 
-        mlp.scatter(parse_x,parse_y,c=numpy.random.rand(3,1),alpha=0.65,label="Team:"+str(i),s=40)
+        plt.scatter(parse_x,parse_y,c=numpy.random.rand(3,1),alpha=0.65,label="Team:"+str(i),s=40)
 
-    mlp.legend()
-    mlp.title("The Result From The Cluster")
+    plt.legend()
+    plt.title("The Result From The Cluster")
 
-    mlp.show()
+    plt.show()
 
 '''
 得到一堆测试用的随机数
