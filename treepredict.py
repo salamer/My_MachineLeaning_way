@@ -108,12 +108,17 @@ def buildtree(rows,scoref=entropy):
                 best_sets=(set1,set2)
 
     if best_gain>0:
+#        print "betstgain:",best_gain
+#        print "bestcol:",best_criteria[0]
+#        print "bestvalue:",best_criteria[1]
         trueBranch=buildtree(best_sets[0])
         falseBranch=buildtree(best_sets[1])
+#        print "betstgain:",best_gain
         return decisionnode(col=best_criteria[0],value=best_criteria[1],tb=trueBranch,fb=falseBranch)
 
     else:
         return decisionnode(results=uniquecounts(rows))
+#        return decisionnode(results=rows)
 
 def printtree(tree,indent=''):
     if tree.results!=None:
@@ -185,6 +190,7 @@ def classify(observation,tree):
             else:
                 branch=tree.fb
         return classify(observation,branch)
+        
 def mdclassify(observation,tree):
     if tree.results!=None:
         return tree.results
