@@ -190,7 +190,7 @@ def classify(observation,tree):
             else:
                 branch=tree.fb
         return classify(observation,branch)
-        
+
 def mdclassify(observation,tree):
     if tree.results!=None:
         return tree.results
